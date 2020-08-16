@@ -66,19 +66,18 @@ const userRouter = require('./routes/user');
 app.use('/',indexRouter);
 app.use('/user',userRouter);
 
-
-
 app.get('/upload',(req,res)=>{
     res.sendFile(path.join(__dirname,'multipart.html'));
   
 })
 
-
+//single   req.file
 /* app.post('/upload',upload.single('image'),(req,res)=>{
     console.log(req.file,req.body);
     res.send('ok');
 }) */
 
+//array  req.files
 app.post('/upload',upload.array('image'),(req,res)=>{
     console.log(req.files,req.body);
     res.send('ok');
