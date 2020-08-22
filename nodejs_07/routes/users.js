@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const Comment = require('../models/comment');
+const { route } = require('.');
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.route('/')
             const users = await User.findAll();
             res.json(users);
         }catch(err){
-
+            console.error(err);
         }
     })
     .post(async (req,res,next)=>{
@@ -23,8 +24,29 @@ router.route('/')
             console.log(user);
             res.status(201).json(user);
         }catch(err){
-            
+            console.error(err);
+        }
+    });
+
+
+
+    router.get('/:id/comments',async(req,res,next)=>{
+        try{
+            const comments = await Comment.findAll({
+                include:{
+                    model:User,
+                    where :{id:req.params.id}
+                }
+            })
+            res.json(comments);
+        }catch(err){
+            console.error(err);
         }
     })
+    
+    
+    
+    
+    
     
     module.exports = router;

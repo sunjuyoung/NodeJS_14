@@ -28,9 +28,11 @@ app.use(express.urlencoded({extended:false}));
 
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
+const commentRouter = require('./routes/comments');
 
 app.use('/',indexRouter);
 app.use('/users',usersRouter);
+app.use('/comments',commentRouter);
 
 app.use((req,res,next)=>{
     const error = new Error(`${req.method}${req.url} 라우터가 없습니다`);
