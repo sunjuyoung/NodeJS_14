@@ -20,8 +20,8 @@ User.init(sequelize);
 Post.init(sequelize);
 Hashtag.init(sequelize);
 
-User.assocaited(db);
-Post.assocaited(db);
-Hashtag.assocaited(db);
+User.associated(db);
+Post.associated(db);
+Hashtag.associated(db);
 
 module.exports = db;
