@@ -49,7 +49,12 @@ app.use(passport.initialize()); // passport 설정
 //req.session 객체는 express-session에서 생성하는것이므로 express-session 미들웨어보다 뒤에 연결
 app.use(passport.session());
 
+const authRouter = require('./routes/auth');
+
+
 app.use('/', pageRouter);
+app.use('/auth',authRouter);
+
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
