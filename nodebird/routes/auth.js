@@ -61,5 +61,17 @@ router.get('/logout',isLoggedIn,(req,res)=>{
 
 })
 
+//카카오 로그인 창으로 리다이렉트
+router.get('/kakao',passport.authenticate('kakao'));
+
+
+//로그인 성공여부결과를 받는다
+//로컬로그인과 다른게 passport.authenticate 메서드에 콜백함수를 제공하지 않는다 카카오 내부적으로 호출
+//실패헀을시 어디로 이동할지만 정한다
+router.get('/kakao/callback',passport.authenticate('kakao',{
+    failureRedirect:'/',
+}),(req,res)=>{
+    res.redirect('/');
+})
 
 module.exports = router;
