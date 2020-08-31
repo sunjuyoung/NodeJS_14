@@ -1,32 +1,31 @@
-const WebSocket = require('ws');
+//const WebSocket = require('ws');
+//ws 대신 socket.io
+const SocketIO = require('socket.io');
 
 module.exports = (server)=>{
-    const wss = new WebSocket.Server({server});
+   // const wss = new WebSocket.Server({server});
+    const io = SocketIO(server,{path:'/socket.io'});
 
-
-    //웹 소켓 객체 ws에 이벤트 리스너 message,error,close
-
-    wss.on('connection',(ws,req)=>{ //웹소켓 연결 시
+    io.on('connection',(socket)=>{ //웹소켓 연결 시
+        const req = socket.request;
         const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         console.log('새로운 클라이언트 접속',ip);
-        ws.on('message',(message)=>{ //클라이언트로부터 메시지 수신 시
-            console.log(message);
-        });
+        socket.on('disconnect',()=>{
+            console.log('접속 해제',ip,socket.id);
+            clearInterval(socket.interval);
+        })
 
-        ws.on('error',(error)=>{
+        socket.on('error',(error)=>{
             console.log(error);
         })
 
-        ws.on('close',()=>{
-            console.log('클라이언트 접속 해제',ip);
-            clearInterval(ws.interval);
+        socket.on('reply',(data)=>{ //클라이언트부터 메시지 수신 시
+            console.log(data);
         })
 
-        
-        ws.interval = setInterval(()=>{//3초마다 클라이언트로 메시지 전송
-            if(ws.readyState === ws.OPEN){ //OPEN , CLOSING , CLOSED, CONNECTING
-                ws.send('서버에서 클라이언트로 메시지를 보냅니다');
-            }
+        socket.interval = setInterval(()=>{
+            socket.emit('news','Hello socket.io'); //이벤트이름, 데이터
         },3000);
-    });
+    })
+
 }
