@@ -4,11 +4,11 @@ const whatsappSchema = mongoose.Schema({
     message:String,
     name:String,
     timestamp:String,
-    received:Boolean
+    received:Boolean,
 },{
     
 });
 
 
 
-module.exports = mongoose.model('messageCount',whatsappSchema);
+module.exports = mongoose.model('messagecontents',whatsappSchema);
