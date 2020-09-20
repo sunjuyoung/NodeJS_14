@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Messages = require('./dbMessages');
 const Pusher = require('pusher');
+const cors = require('cors');
 
 
 
@@ -26,6 +27,7 @@ var pusher = new Pusher({
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cors());
 /* app.use((req,res,next)=>{
     res.setHeader("Access-Control-Allow-Origin","*");
     res.setHeader("Access-Control-Allow-Headers","*");
@@ -52,6 +54,8 @@ const db = mongoose.connection;
             pusher.trigger('message','inserted',{
                 name:messageDetails.name,
                 message:messageDetails.message,
+                timestamp:messageDetails.timestamp,
+                received:messageDetails.received
             })
         }else{
             console.log("error trigger");
