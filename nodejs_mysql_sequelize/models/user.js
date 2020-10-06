@@ -20,7 +20,7 @@ module.exports = class User extends Sequelize.Model{
             },
             comment:{
                 type:Sequelize.TEXT,
-                allowNull:false,
+                allowNull:true,
 
             },
             create_at:{
