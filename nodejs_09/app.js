@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const nunjucks = require('nunjucks');
 const {sequelize} = require('./models');
+const passport = require('./passport');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -14,6 +15,7 @@ const pageRouter = require('./routes/page');
 const app = express();
 const PORT = process.env.PORT || 8000;
 app.set('PORT',PORT);
+passportConfig();//패스포트 설정
 
 app.set('view engine','html');
 nunjucks.configure('views',{
@@ -24,6 +26,7 @@ sequelize.sync({force:false})
     .then(()=>{
         console.log('db연결');
     })
+
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -40,7 +43,8 @@ app.use(session({
         secure:false
     }
 }))
-
+app.use(passport.initialize()); //미들웨어 req객체에 passport 설정을 심고
+app.use(passport.session());//req.session객체에 passport 정보 저장 , express.session 보다 뒤에 연결
 
 
 
