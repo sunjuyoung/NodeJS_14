@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const nunjucks = require('nunjucks');
+const {sequelize} = require('./models');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -19,6 +20,10 @@ nunjucks.configure('views',{
     express:app,
     watch:true
 })
+sequelize.sync({force:false})
+    .then(()=>{
+        console.log('db연결');
+    })
 
 app.use(cors());
 app.use(morgan('dev'));

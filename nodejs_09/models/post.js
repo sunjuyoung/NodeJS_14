@@ -27,6 +27,9 @@ module.exports = class Post extends Sequelize.Model{
     }
 
     static associate(db){
+        db.Post.belongsTo(db.User);
 
+        //자동으로 생성된 모델 접근 db.sequelize.models.PostHashtag
+        db.Post.belongsToMany(db.Hashtag,{through:'PostHashtag'});
     }
 }
