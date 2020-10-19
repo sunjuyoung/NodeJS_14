@@ -7,13 +7,15 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const nunjucks = require('nunjucks');
 const {sequelize} = require('./models');
-const passport = require('./passport');
+const passport = require('passport');
+const passportConfig = require('./passport');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 app.set('PORT',PORT);
 passportConfig();//패스포트 설정
 
@@ -27,8 +29,7 @@ sequelize.sync({force:false})
         console.log('db연결');
     })
 
-
-app.use(cors());
+//app.use(cors());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
@@ -46,11 +47,8 @@ app.use(session({
 app.use(passport.initialize()); //미들웨어 req객체에 passport 설정을 심고
 app.use(passport.session());//req.session객체에 passport 정보 저장 , express.session 보다 뒤에 연결
 
-
-
-
 app.use("/",pageRouter);
-
+app.use('/auth',authRouter);
 
 app.use((req,res,next)=>{
     const error = new Error(`${req.method}${req.url} 라우터가 없습니다`);
@@ -58,10 +56,12 @@ app.use((req,res,next)=>{
     next(error);
 });
 
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next) => {
+    res.locals.message = err.message;
+    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
     res.status(err.status || 500);
-    console.log(err);
-})
+    res.render('error');
+  });
 
 
 app.listen(PORT,()=>{

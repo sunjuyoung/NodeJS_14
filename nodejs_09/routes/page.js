@@ -9,6 +9,7 @@ router.use((req,res,next)=>{
     res.locals.followerCount=0;
     res.locals.followingCount=0;
     res.locals.followerIdList=[];
+    next();
 }); //null,0,0,[]
 
 router.get("/profile", isLoggedIn,(req,res)=>{ //로그인 해야 가능 , req.isAuthenticated() true이면 next 호출되어 넘어간다
@@ -19,7 +20,7 @@ router.get('/join',isNotLoggedIn,(req,res)=>{
     res.render('join',{title:'회원가입 - NodeBird'});
 })
 
-router.get('/',(req,res)=>{
+router.get('/',(req,res,next)=>{
     const twits = [];//게시글
     res.render('main',{title:' NodeBird',twits});
 })
