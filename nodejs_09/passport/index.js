@@ -2,7 +2,6 @@ const passport = require('passport');
 const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
 const User = require('../models/user');
-const kakaoStrategy = require('./kakaoStrategy');
 
 /* 
 serializeUser 로그인시 실행 , req.session 어떤 데이터를 저장할지 정하는 메서드

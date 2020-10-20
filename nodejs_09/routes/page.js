@@ -1,6 +1,7 @@
 const express = require('express');
 const {isLoggedIn ,isNotLoggedIn} = require('./middlewares');
 const router = express.Router();
+const {Post,User} = require('../models');
 
 //미들웨어
 //locals값으로 설정하여 모든 템플릿 엔진에서 공통으로 사용
@@ -20,9 +21,21 @@ router.get('/join',isNotLoggedIn,(req,res)=>{
     res.render('join',{title:'회원가입 - NodeBird'});
 })
 
-router.get('/',(req,res,next)=>{
-    const twits = [];//게시글
-    res.render('main',{title:' NodeBird',twits});
+router.get('/', async (req,res,next)=>{
+    try {
+        const posts = await Post.findAll({
+            include:{
+                model:User,
+                attributes:['id','nick'],
+            },
+            order:[['createdAt','DESC']],
+        });
+        res.render('main',{title:'NodeBird',twits:posts})
+    } catch (error) {
+        console.log(error);
+        next(error);
+        
+    }
 })
 
 module.exports = router;
