@@ -5,24 +5,23 @@
   <title>GIF 채팅방</title>
 </head>
 <body>
-<div>F12를 눌러 console 탭과 network 탭을 확인하세요.</div>
-<div> 클라이언트에서 제공하는 스크립트 ,실제 파일이 아니다
-  API웹 소켓 통신이 가능하게한다
-  스크립트가 제공하는 io객체에 서버주소를 연결
-  ws달리 http프로토콜을 사용한다 옵션path는 서버와 일치해야한다
-  
-  socket.io는 먼저 폴링 방식으로 서버와 연결한다 , 후에 웹 소켓사용이 가능하면
-  웹 소켓으로 업그레이드 한다
-  웹소켓만 사용하고싶다면 transport:['websocket'] 옵션 추가한다.
+<div>F12를 눌러 console 탭과 network 탭을 확인하세요.
+클라이언트에서 제공하는 스크립트 ,실제 파일이 아니다 
+API웹 소켓 통신이 가능하게한다 
+스크립트가 제공하는 io객체에 서버주소를 연결 ws달리 http프로토콜을 사용한다 
+옵션path는 서버와 일치해야한다 socket.io는 먼저 폴링 방식으로 서버와 연결한다 , 
+후에 웹 소켓사용이 가능하면 웹 소켓으로 업그레이드 한다
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io.connect('http://localhost:8005',{path:'/socket.io'});
-  socket.on('news',function(data){
+  const socket = io.connect('http://localhost:8005', {
+    path: '/socket.io',
+    transports: ['websocket'],
+  });
+  socket.on('news', function (data) {
     console.log(data);
-    socket.emit('reply','hello node.js');
-  })
-
+    socket.emit('reply', 'Hello Node.JS');
+  });
 </script>
 </body>
 </html>

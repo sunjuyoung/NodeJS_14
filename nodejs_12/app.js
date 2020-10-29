@@ -6,10 +6,12 @@ const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const nunjucks = require('nunjucks');
+const ColorHash = require('color-hash');
 
 const app = express();
 const indexRouter = require('./routes');
 const webSocket = require('./socket');
+const connect = require('./schemas');
 
 dotenv.config();
 
@@ -19,13 +21,14 @@ nunjucks.configure('views',{
     express:app,
     watch:true
 });
+connect();
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+const sessionMiddleware = session({
     resave:false,
     saveUninitialized:false,
     secret:process.env.COOKIE_SECRET,
@@ -33,11 +36,21 @@ app.use(session({
         httpOnly:true,
         secure:false
     }
-}));
+});
+app.use(sessionMiddleware);
+app.use((req,res,next)=>{
+    if(!req.session.color){
+        const colorHash = new ColorHash();
+        req.session.color = colorHash.hex(req.sessionID);
+    }
+    next();
+});
+
+
 
 app.use('/',indexRouter);
 
 const server = app.listen(app.get('port'),()=>{
     console.log(app.get('port'),'번으로 실행중');
 });
-webSocket(server);
+webSocket(server,app,sessionMiddleware);
