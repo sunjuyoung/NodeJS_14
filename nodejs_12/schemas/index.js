@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const {MONGO_ID,MONGO_PASSWORD,NODE_ENV}= process.env;
-const MONGO_URL = `mongodb+srv://${MONGO_ID}:${MONGO_PASSWORD}@bolierplate.uwqnl.mongodb.net/admin?retryWrites=true&w=majority`;
+const MONGO_URL = `mongodb+srv://admin:rnrdj123@bolierplate.uwqnl.mongodb.net/admin?retryWrites=true&w=majority`;
 
 const connect = ()=>{
     if(NODE_ENV !== 'production'){

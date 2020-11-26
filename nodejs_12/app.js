@@ -11,7 +11,7 @@ const ColorHash = require('color-hash');
 const app = express();
 const indexRouter = require('./routes');
 const webSocket = require('./socket');
-const connect = require('./schemas');
+const connect = require('./schemas');//mongoose
 
 dotenv.config();
 
